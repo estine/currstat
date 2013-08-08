@@ -1,0 +1,46 @@
+# Eli Stine
+# CS241 - Sys Prog.
+# Steven Crain
+# 11-13-12
+# currstat.sh README
+
+>currstat.sh
+-->Displays the current status of a user, including info. about them (full name, position), their processes (most recent commands, highest memory usage, etc.) and server usage heuristics (IP address connections, session length, idle time)
+
+-->Information about arguments in man page (run "./showman.sh" from main directory)
+
+-->Script Usage
+	  1) Identify who you want to get the current status of. They can either be on the server currently (use "who") or any other user who has access to the server.
+	  2) Run "./currstat.sh <flags> <username>". Adjust flags accordingly to get more verbose output/different heuristics.
+	  
+	  For example, here's what "./currstat.sh cmohler -g -p -w -i" returns (on Tuesday, November 13th, 9:16AM):
+	  Current status of cmohler, AKA chris mohler, in group "sysadmin":
+
+	  This user has a domain name named after them.
+
+	  Up to 10 most recent commands:   
+	   Nov_12 27490 -bash
+	   Nov_12 27484 /usr/lib/ssh/sshd
+
+	   Current process with greatest virtual memory usage:
+	   /usr/lib/ssh/sshd 8884
+	   Current process with most pages open:
+	   /usr/lib/ssh/sshd 2221
+
+	   User has been on the server since: Nov 12 08:18 
+           User has been idle: 23:08
+           
+           IP address (132.162.201.27) activity instances: 1
+
+--> Report:
+I am using several characteristics for reporting, some of which are baked into various Linux commands (for example "finger", "id", "whois", and "who", which are less important for this class, but nonetheless, valuable information to report) and some of which are scraped from ps. The 3 characteristics I scraped from ps are rss (an estimate of the resident set size- a sum of all space used by the process in virtual memory in kilobytes) and osz (size of process's image in pages, where pages are 4096 bytes on OCCS (I found this out using the handy "pagesize" command), both of which I sorted numerically, highest first, and comm (the name of the command being executed (argv[0])), which I sorted using stime (the starting time of the process) (Solaris). I chose these three characteristics because they give an idea of two things: what the user has worked on recently (commands) and then two heuristics for the largest processes they've run. Having the previous commands of a user are invaluable, as it directly shows how they are interacting with the system, how many times they're running a particular command, and the order of their commands. Having two different heuristics for size of programs is also helpful: ~usually~ the two are the same program (in my tests for various users of OCCS), but if the difference between the two is large, or both are particularly large, there may be something going on that needs to be checked out. Looking into it a bit the resident set size characteristic should generally be exactly 4x larger than the osz characteristic (as rss is measured in kilobytes and the pages on OCCS are 4x1024), but this will vary by server. As rss includes an estimate of all memory that is not in swap space taken up by the process, whereas the osz heuristic is a subset of the resident set size, it is possible for rss to be more than 4xosz on OCCS, and I've noticed it is also possible for osz to be larger than rss/4 (unsure why this is true, however) (Linux). Overall, having these three characteristics (and the many more included the program) allows the user to get a quick glimpse of what someone has done recently, in order to see if they are using malicious commands, are using too much virtual memory space, or just to gain a better idea of their current working status.
+
+Works Cited:
+      Linux in a Nutshell. Chapter 3. Linux Commands > ps.
+           http://proquest.safaribooksonline.com/9780596806088/alphabetical_summary_of_commands?bookview=search&query=resident+set+size&reader=ht ml&imagepage=
+      Solaris 2.5 - man pages. ps command.
+           http://www.cs.bgu.ac.il/~arik/usail/man/solaris/ps.1.html
+      Wikipedia: Page (computer memory).
+           http://en.wikipedia.org/wiki/Page_%28computer_memory%29
+
+I have adhered to the Honor Code in this assignment -- Eli Stine

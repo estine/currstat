@@ -1,0 +1,78 @@
+.\" man page for shell script currstat
+.\" Eli Stine
+.\" CS241 - Sys. Prog. with Steven Crain
+.\" Date
+
+.TH currstat 1 "November 13 2012" "CSCI 241" "Oberlin College"
+
+.SH NAME
+.B currstat
+\− Displays the current status of a user, including info. about the
+user, their processes, and server usage heuristics
+
+.SH SYNOPSIS
+.B currstat <username> [optional flags]
+Flags:
+[-a]
+[-g]
+[-i]
+[-p]
+[-t]
+[-w]
+
+.SH DESCRIPTION
+currstat displays the following (commands without flag are
+displayed automatically, if the data for them exists):
+
+# 1) Full name of user, position (student, teacher, alumni, sys admin etc.)
+
+# 1a) If they have a website named after them (-w flag)
+
+# 2) Last x commands they made (default is 3) (increases to 10 with -p
+flag)
+
+# 2a) Process they have with greatest virtual memory usage and process
+they have with greatest number of pages (-g flag)
+
+# 2b) Process tree for user (-t flag)
+
+# 3) Number of connections on their IP address
+
+# 4) Time when they logged on
+
+# 5a) How long they've been idle, if they're idle (-i flag) 
+
+# Bonus: -a flag sets all flags on
+
+.SH OPTIONS
+.IP "-a"
+Is the same as running currstat with all of the flags below on.
+
+.IP "-g"
+Calculates the 2 processes the user has running that have the most
+virtual memory used and pages open, respectively, if the user has
+processes open.
+
+.IP "-i"
+Checks if the user has been idle. If they have been, length of time
+they have been idle is output, if not, a message saying as much is output.
+
+.IP "-p"
+Will display up to 10 of the user's most recent commands
+rather than the normal 3.
+
+.IP "-t"
+Displays the process tree for the user input.
+
+.IP "-w"
+Searches the whois world wide web database and returns whether or not
+the user whose current status is being checked has a website named
+after their full name (for example, estine -> searches for "EliStine.com/net/org/etc."
+
+.SH AUTHOR
+Eli Stine (Fall 2012)
+
+.SH BUGS
+If the user has processes that are older than 24 hours then the
+formatting of the entry in the stime column of ps changes and it is
+not guaranteed that the order of their most recent processes will be correct
